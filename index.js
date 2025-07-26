@@ -14,7 +14,7 @@ const path = require('path');
 dotenv.config();
 
 app.use(cors({
- origin:  ['http://localhost:8080', 'http://127.0.0.1:5173', 'https://syaca.onrender.com'],
+ origin:  true , // ['http://localhost:8080', 'http://127.0.0.1:5173', 'https://syaca.onrender.com'],
   credentials: true,
 }));
 
