@@ -4,7 +4,9 @@ const Course = require('../models/courseModel');
 // GET all courses
 exports.getAllCourses = async (req, res) => {
     try {
-      const courses = await Course.findAll();
+      const courses = await Course.findAll({
+      order: [['createdAt', 'DESC']] // Sort by createdAt descending
+    });
       res.json(courses);
     } catch (err) {
       res.status(500).json({ error: 'Failed to retrieve courses' });
