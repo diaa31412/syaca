@@ -118,7 +118,7 @@ exports.verifyEmail = async (req, res) => {
 
     if (!user) return res.status(404).json({ error: 'User not found' });
 
-    if (user.verificationCode !== code) {
+    if (user.verificationCode !== code.trim()) {
       return res.status(400).json({ error: 'Invalid code' });
     }
 
@@ -218,3 +218,24 @@ exports.verifyCodeReset = async (req, res) => {
     res.status(500).json({ error: 'Internal server error', details: error.message });
   }
 };
+
+exports.resendCode= async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const user = await User.findOne({ where: { email } });
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    const newCode = Math.floor(100000 + Math.random() * 900000).toString();
+    user.verificationCode = newCode;
+    await user.save();
+
+    // sendEmail is your custom email sending function
+    await sendEmail(user.email, 'رمز التحقق', `رمزك هو: ${newCode}`);
+
+    res.json({ message: 'تم إرسال كود جديد إلى بريدك الإلكتروني' });
+  } catch (error) {
+    res.status(500).json({ error: 'فشل في إرسال الكود الجديد' });
+  }
+};
+

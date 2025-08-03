@@ -18,6 +18,7 @@ router.get('/verify-token', authMiddleware, (req, res) => {
 router.post('/forgot-password', userController.forgotPassword);
 router.post('/reset-password', userController.resetPassword);
 router.post('/verify-code-reset', userController.verifyCodeReset);
+router.post('/resend-code',userController.resendCode);
 
 
 
