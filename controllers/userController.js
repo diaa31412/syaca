@@ -52,6 +52,13 @@ exports.signin = async (req, res) => {
     const match = await bcrypt.compare(password, user.password);
     if (!match) return res.status(401).json({ error: 'Invalid credentials' });
 
+
+    // Check if user is verified before anything else
+    if (!user.isVerified) {
+      return res.status(403).json({ error: 'الحساب غير مفعل، يرجى التحقق من بريدك الإلكتروني' });
+    }
+
+
     const deviceFingerprint = generateDeviceFingerprint(req);
 
     // تعطيل المستخدم على الأجهزة السابقة
@@ -231,7 +238,8 @@ exports.resendCode= async (req, res) => {
     await user.save();
 
     // sendEmail is your custom email sending function
-    await sendEmail(user.email, 'رمز التحقق', `رمزك هو: ${newCode}`);
+    // await sendEmail(user.email, 'رمز التحقق', `رمزك هو: ${newCode}`);
+     await sendVerificationEmail(email, code);
 
     res.json({ message: 'تم إرسال كود جديد إلى بريدك الإلكتروني' });
   } catch (error) {
