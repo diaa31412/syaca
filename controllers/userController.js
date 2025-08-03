@@ -239,7 +239,7 @@ exports.resendCode= async (req, res) => {
 
     // sendEmail is your custom email sending function
     // await sendEmail(user.email, 'رمز التحقق', `رمزك هو: ${newCode}`);
-     await sendVerificationEmail(email, code);
+     await sendVerificationEmail(email, newCode);
 
     res.json({ message: 'تم إرسال كود جديد إلى بريدك الإلكتروني' });
   } catch (error) {
