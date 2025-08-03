@@ -235,6 +235,7 @@ exports.resendCode= async (req, res) => {
 
     const newCode = Math.floor(100000 + Math.random() * 900000).toString();
     user.verificationCode = newCode;
+    user.resetCodeExpiration = new Date();
     await user.save();
 
     // sendEmail is your custom email sending function
