@@ -22,17 +22,17 @@ exports.signup = async (req, res) => {
   try {
     
     // Generate 6-digit verification code
-    // const code = Math.floor(100000 + Math.random() * 900000).toString();
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
 
     // Check if user exists
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) return res.status(400).json({ error: 'Email already exists' });
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({ userName, email, password: hashedPassword });
+    const user = await User.create({ userName, email, password: hashedPassword  , verificationCode : code ,isActive : false});
      
 
-    // await sendVerificationEmail(email, code);
+    await sendVerificationEmail(email, code);
 
     res.status(201).json({ message: 'User created', userId: user.id , role: user.role});
   } catch (err) {
