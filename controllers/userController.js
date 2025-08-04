@@ -131,7 +131,7 @@ exports.verifyEmail = async (req, res) => {
 
     const MAX_AGE = 5 * 60 * 1000; // 5 minutes in milliseconds
 
-    if (user.resetCode !== code) {
+    if (user.verificationCode !== code.trim()) {
       return res.status(400).json({ error: 'Invalid code' });
     }
 

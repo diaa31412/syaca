@@ -19,6 +19,7 @@ router.post('/forgot-password', userController.forgotPassword);
 router.post('/reset-password', userController.resetPassword);
 router.post('/verify-code-reset', userController.verifyCodeReset);
 router.post('/resend-code',userController.resendCode);
+router.post('/verifyEmail', userController.verifyEmail)
 
 
 
