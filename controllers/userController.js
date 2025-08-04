@@ -207,7 +207,6 @@ exports.resetPassword = async (req, res) => {
   }
 };
 
-
 exports.verifyCodeReset = async (req, res) => {
   const { email, code } = req.body;
 
@@ -216,8 +215,18 @@ exports.verifyCodeReset = async (req, res) => {
 
     if (!user) return res.status(404).json({ error: 'User not found' });
 
-    if (user.resetCode !== code || new Date() > user.resetCodeExpiration) {
-      return res.status(400).json({ error: 'Invalid or expired code' });
+    const now = new Date();
+    const sentTime = new Date(user.resetCodeExpiration); // This should be the time the code was generated
+    const ageMs = now - sentTime;
+
+    const MAX_AGE = 5 * 60 * 1000; // 5 minutes in milliseconds
+
+    if (user.resetCode !== code) {
+      return res.status(400).json({ error: 'Invalid code' });
+    }
+
+    if (ageMs > MAX_AGE) {
+      return res.status(400).json({ error: 'Code has expired' });
     }
 
     res.json({ message: 'Code verified successfully', email });
