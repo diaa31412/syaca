@@ -125,9 +125,22 @@ exports.verifyEmail = async (req, res) => {
 
     if (!user) return res.status(404).json({ error: 'User not found' });
 
-    if (user.verificationCode !== code.trim()) {
+    const now = new Date();
+    const sentTime = new Date(user.resetCodeExpiration); // This should be the time the code was generated
+    const ageMs = now - sentTime;
+
+    const MAX_AGE = 5 * 60 * 1000; // 5 minutes in milliseconds
+
+    if (user.resetCode !== code) {
       return res.status(400).json({ error: 'Invalid code' });
     }
+
+    if (ageMs > MAX_AGE) {
+      return res.status(400).json({ error: 'Code has expired' });
+    }
+    // if (user.verificationCode !== code.trim()) {
+    //   return res.status(400).json({ error: 'Invalid code' });
+    // }
 
     user.isVerified = true;
     user.verificationCode = null;
