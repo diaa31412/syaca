@@ -90,7 +90,8 @@ exports.signin = async (req, res) => {
         email: user.email,
         userName: user.userName,
         role: user.role,
-        isActive: true
+        isActive: true,
+        isVerified:user.isVerified
       }
     });
   } catch (err) {
