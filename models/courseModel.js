@@ -28,7 +28,16 @@ const Course = sequelize.define('Course', {
    image: {
     type: DataTypes.STRING, // Stores file path/filename
     allowNull: true // Set to false later if needed
-  }
+  },
+  category :{ //to store if the class science or literray 
+    type : DataTypes.STRING, 
+    allowNull: true
+  } ,
+   kind :{
+    type: DataTypes.STRING ,
+    allowNull: true
+   }
+  
 
 },{
   tableName:'courses',

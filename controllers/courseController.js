@@ -37,7 +37,9 @@ exports.createCourse = async (req, res) => {
     if (req.file) {
       imagePath = req.file.filename; // Get uploaded filename
     }
-      const course = await Course.create({ courseName,  className, teacherName ,description,image: imagePath});
+      const course = await Course.create({ courseName,  className, teacherName ,description,image: imagePath ,category,
+      kind
+});
       res.status(201).json(course);
     } catch (err) {
       res.status(500).json({ error: 'Failed to create course' + err});
@@ -48,7 +50,9 @@ exports.createCourse = async (req, res) => {
   // UPDATE course (Admin only)
 exports.updateCourse = async (req, res) => {
     try {
-      const { courseName, className: className, teacherName,description } = req.body;
+      const { courseName, className: className, teacherName,description  ,category,
+      kind
+} = req.body;
       const course = await Course.findByPk(req.params.id);
       if (!course) return res.status(404).json({ error: 'Course not found' });
 
@@ -60,6 +64,9 @@ exports.updateCourse = async (req, res) => {
       course.className = className;
       course.teacherName = teacherName;
       course.description = description;
+      course.category = category;
+      course.kind = kind
+
 
       // Update image if new file uploaded
     if (req.file) {
