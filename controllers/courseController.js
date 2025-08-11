@@ -51,7 +51,7 @@ exports.createCourse = async (req, res) => {
 exports.updateCourse = async (req, res) => {
     try {
       const { courseName, className: className, teacherName,description  ,category,
-      kind
+      kind ,status
 } = req.body;
       const course = await Course.findByPk(req.params.id);
       if (!course) return res.status(404).json({ error: 'Course not found' });
@@ -65,7 +65,8 @@ exports.updateCourse = async (req, res) => {
       course.teacherName = teacherName;
       course.description = description;
       course.category = category || null;
-      course.kind = kind || null
+      course.kind = kind || null ;
+      course.status = status
 
 
       // Update image if new file uploaded

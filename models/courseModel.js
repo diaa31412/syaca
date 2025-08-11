@@ -36,6 +36,11 @@ const Course = sequelize.define('Course', {
    kind :{
     type: DataTypes.STRING ,
     allowNull: true
+   },
+   status :{
+    type:DataTypes.STRING,
+    defaultValue: "paid",
+    
    }
   
 
