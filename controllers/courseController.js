@@ -30,7 +30,7 @@ exports.getCourseById = async (req, res) => {
   // CREATE course (Admin only)
 exports.createCourse = async (req, res) => {
     try {
-      const { courseName, className, teacherName , description} = req.body;
+      const { courseName, className, teacherName , description , category , kind} = req.body;
 
         // Handle image upload
     let imagePath = null;
