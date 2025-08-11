@@ -64,8 +64,8 @@ exports.updateCourse = async (req, res) => {
       course.className = className;
       course.teacherName = teacherName;
       course.description = description;
-      course.category = category;
-      course.kind = kind
+      course.category = category || null;
+      course.kind = kind || null
 
 
       // Update image if new file uploaded
