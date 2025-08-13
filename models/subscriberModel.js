@@ -17,7 +17,7 @@ const Subscriber = sequelize.define('Subscriber', {
   },
   cardId: {
     type: DataTypes.INTEGER,
-    allowNull: false
+    allowNull: true
   }
 }, {
   tableName: 'subscribers',
