@@ -34,79 +34,64 @@ exports.getUserSubscriptions = async (req, res) => {
 
 }
 
-
-exports.createSubscription = async (req, res) => {
+exports.subscribe = async (req, res) => {
   const transaction = await db.sequelize.transaction();
-   
   try {
     const { courseId, card_number } = req.body;
     const userId = req.user.id;
 
-    // 0. Check course status
-    const course = await db.Course.findByPk(courseId);
+    // 1. Check if course exists
+    const course = await Course.findByPk(courseId, { transaction });
     if (!course) {
       await transaction.rollback();
-      return res.status(404).json({ error: 'Course not found' });
+      return res.status(404).json({ message: 'Course not found' });
     }
 
-    // 1. Check if subscription already exists
-    const existingSub = await Subscriber.findOne({
-      where: { userId, courseId },
-      transaction
-    });
+    // 2. Check if subscription already exists
+    const existingSub = await Subscriber.findOne({ where: { userId, courseId }, transaction });
     if (existingSub) {
       await transaction.rollback();
-      return res.status(400).json({ error: 'Already subscribed to this course' });
+      return res.status(400).json({ message: 'Already subscribed to this course' });
     }
 
-    // 2. If course is free → skip card validation
-    if (course.status === "free") {
-      const subscription = await Subscriber.create({
-        userId,
-        courseId
-      }, { transaction });
-
+    // 3. Free course → no card needed
+    if (course.status === 'free') {
+      const subscription = await Subscriber.create({ userId, courseId }, { transaction });
       await transaction.commit();
-      return res.status(201).json(subscription);
+      return res.status(201).json({ message: 'Subscribed successfully (free course)', subscription });
     }
 
-    // 3. For paid courses → verify card
-    const card = await Card.findOne({ 
-      where: { card_number: card_number },
-      transaction
-    });
+    // 4. Paid course → card required
+    if (!card_number) {
+      await transaction.rollback();
+      return res.status(400).json({ message: 'Card number is required for paid courses' });
+    }
 
+    // 5. Validate card
+    const card = await Card.findOne({ where: { card_number }, transaction });
     if (!card) {
       await transaction.rollback();
-      return res.status(404).json({ error: 'Card not found' });
+      return res.status(404).json({ message: 'Card not found' });
     }
-
     if (!card.isActive) {
       await transaction.rollback();
-      return res.status(400).json({ error: 'Card is not active' });
+      return res.status(400).json({ message: 'Card is already used' });
     }
 
-    // 4. Deactivate the card
+    // 6. Deactivate card
     await card.update({ isActive: false }, { transaction });
 
-    // 5. Create subscription
-    const subscription = await Subscriber.create({
-      userId,
-      courseId,
-      cardId: card.id
-    }, { transaction });
-
+    // 7. Create subscription
+    const subscription = await Subscriber.create({ userId, courseId, cardId: card.id }, { transaction });
     await transaction.commit();
-    res.status(201).json(subscription);
+    return res.status(201).json({ message: 'Subscribed successfully', subscription });
 
   } catch (err) {
     await transaction.rollback();
-    console.log(err.message);
-    res.status(500).json({ error: 'Subscription failed: ' + err.message });
+    console.error(err);
+    return res.status(500).json({ message: 'Subscription failed: ' + err.message });
   }
-};
-
-
+}
 // exports.createSubscription = async (req, res) => {
 //   const transaction = await db.sequelize.transaction();
    
