@@ -32,6 +32,26 @@ exports.getAllCourses = async (req, res) => {
   }
 };
 
+
+// Get course by category
+  exports.getCourseByCategory = async (req, res) => {
+  try {
+    const category = req.params.category; // from URL
+    const courses = await Course.findAll({
+      where: { category }, // Sequelize filter
+      order: [['createdAt', 'DESC']]
+    });
+
+    if (!courses || courses.length === 0) {
+      return res.status(404).json({ error: 'No courses found for this class' });
+    }
+
+    res.json(courses);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to retrieve courses by className' });
+  }
+};
+
   
 // GET course by ID
 exports.getCourseById = async (req, res) => {
