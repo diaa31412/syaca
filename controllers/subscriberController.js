@@ -8,20 +8,20 @@ const Card = db.Card;
 
 
 
-exports.subscribe = async (req, res) => {
-  try {
-    const { courseId } = req.body;
-    const userId = req.user.id; // from auth middleware
+// exports.subscribe = async (req, res) => {
+//   try {
+//     const { courseId } = req.body;
+//     const userId = req.user.id; // from auth middleware
 
-    const exists = await Subscriber.findOne({ where: { userId, courseId } });
-    if (exists) return res.status(400).json({ message: 'Already subscribed' });
+//     const exists = await Subscriber.findOne({ where: { userId, courseId } });
+//     if (exists) return res.status(400).json({ message: 'Already subscribed' });
 
-    const subscription = await Subscriber.create({ userId, courseId });
-    res.status(201).json(subscription);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
+//     const subscription = await Subscriber.create({ userId, courseId });
+//     res.status(201).json(subscription);
+//   } catch (err) {
+//     res.status(500).json({ error: err.message });
+//   }
+// };
 
 exports.getUserSubscriptions = async (req, res) => {
   try {
