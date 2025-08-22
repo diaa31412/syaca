@@ -1,42 +1,11 @@
-// const User = require('./userModel');
-// const Course = require('./courseModel');
-// const Subscriber = require('./subscriberModel');
-// const Video = require('./videoModel');
-// const sequelize = require('../config/db');
-
-// // Define associations
-// User.belongsToMany(Course, {
-//   through: Subscriber,
-//   foreignKey: 'userId',
-//   as: 'subscribedCourses',
-// });
-// Course.belongsToMany(User, {
-//   through: Subscriber,
-//   foreignKey: 'courseId',
-//   as: 'subscribers',
-// });
-
-// Subscriber.belongsTo(User, { foreignKey: 'userId', as: 'user' });
-// Subscriber.belongsTo(Course, { foreignKey: 'courseId', as: 'course' });
-
-// Course.hasMany(Video, { foreignKey: 'courseId', as: 'videos' });
-// Video.belongsTo(Course, { foreignKey: 'courseId', as: 'course' });
-
-// module.exports = {
-//   sequelize,
-//   User,
-//   Course,
-//   Subscriber,
-//   Video
-// };
-
-
 
 const User = require('./userModel');
 const Course = require('./courseModel');
 const Subscriber = require('./subscriberModel');
 const Video = require('./videoModel');
-const Card = require('./cardModel'); // Make sure to include Card model
+const Card = require('./cardModel'); 
+const UserProgress = require('./userProgressModel');
+const CourseProgress = require('./courseProgressModel');
 const Session = require('./sessionModel');
 const sequelize = require('../config/db');
 
@@ -104,6 +73,56 @@ User.hasMany(Card, {
 Card.belongsTo(User, {
   foreignKey: 'userId',
   as: 'user'
+});
+
+UserProgress.belongsTo(User,
+   { foreignKey: 'userId', 
+    as: 'user' 
+});
+
+UserProgress.belongsTo(Course, 
+  { foreignKey: 'courseId',
+     as: 'course' 
+});
+
+UserProgress.belongsTo(Video, 
+  { foreignKey: 'videoId',
+   as: 'video' 
+});
+
+User.hasMany(UserProgress,
+   { foreignKey: 'userId', 
+  as: 'progress' 
+});
+
+Course.hasMany(UserProgress, 
+  { foreignKey: 'courseId',
+     as: 'progress'
+ });
+
+Video.hasMany(UserProgress, 
+  { foreignKey:'videoId',
+     as: 'progress' 
+});
+
+CourseProgress.belongsTo(User, 
+  { foreignKey: 'userId', 
+as: 'user' });
+
+
+CourseProgress.belongsTo(Course,
+   { foreignKey: 'courseId', 
+as: 'course'
+});
+
+User.hasMany(CourseProgress,
+   { foreignKey: 'userId', 
+  as: 'courseProgress'
+ });
+ 
+Course.hasMany(CourseProgress, 
+  { foreignKey: 'courseId', 
+    as: 'courseProgress' 
 });
 
 module.exports = {

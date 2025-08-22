@@ -10,6 +10,7 @@ const courseRoutes = require('./routes/courseRoutes');
 const videoRoutes = require('./routes/videoRoutes');
 const cardRoutes = require('./routes/cardRoutes');
 const subscribeRoutes = require('./routes/subscriberRoutes');
+const progressRoutes = require('./routes/progressRoutes');
 const path = require('path');
 dotenv.config();
 
@@ -70,6 +71,10 @@ app.use('/api/cards', cardRoutes);
 
 // Use router subscriber
 app.use('/api/subscriptions', subscribeRoutes)
+
+
+app.use('/api/progress', progressRoutes);
+
 
 // Start server
 const PORT = process.env.PORT || 5000;
