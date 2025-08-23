@@ -2,14 +2,14 @@ const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
 
 // Import models
-const User = require('./userModel')(sequelize, DataTypes);
-const Course = require('./courseModel')(sequelize, DataTypes);
-const Subscriber = require('./subscriberModel')(sequelize, DataTypes);
-const Video = require('./videoModel')(sequelize, DataTypes);
-const Card = require('./cardModel')(sequelize, DataTypes);
-const UserProgress = require('./userProgressModel')(sequelize, DataTypes);
-const CourseProgress = require('./courseProgressModel')(sequelize, DataTypes);
-const Session = require('./sessionModel')(sequelize, DataTypes);
+const User = require('./userModel');
+const Course = require('./courseModel');
+const Subscriber = require('./subscriberModel');
+const Video = require('./videoModel');
+const Card = require('./cardModel');
+const UserProgress = require('./userProgressModel');
+const CourseProgress = require('./courseProgressModel');
+const Session = require('./sessionModel');
 
 // User-Course many-to-many through Subscriber
 User.belongsToMany(Course, {
