@@ -1,4 +1,9 @@
-const { User, Video, Course, UserProgress, CourseProgress } = require('../models');
+// const { User, Video, Course, UserProgress, CourseProgress } = require('../models');
+const User = require('../models/userModel');
+const Video = require('../models/videoModel');
+const Course = require('../models/courseModel');
+const UserProgress = require('../models/userProgressModel');
+const CourseProgress = require('../models/courseProgressModel');
 
 exports.saveProgress = async (req, res) => {
   const { userId, courseId, videoId, isCompleted, lastPosition } = req.body;
